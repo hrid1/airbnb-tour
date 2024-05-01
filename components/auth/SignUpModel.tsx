@@ -1,6 +1,10 @@
-"use client"
+"use client";
 
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";  
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,15 +20,62 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { RegisterType, registerSchema } from "@/validations/authSchema";
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
+
+
 
 export default function SignUpModel() {
+  const [open, setOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const supabase = createClient();
+  const router = useRouter();
+ 
 
-    const [open, setOpen] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterType>({
+    resolver: yupResolver(registerSchema),
+  });
+  const onSubmit = async (payload: RegisterType) => {
+    setLoading(true);
+    // console.log(data);
+    const {data, error} = await supabase.auth.signUp({
+      email: payload.email,
+      password: payload.password,
+      options: {
+        data: {
+          name: payload.name,
+        },
+      },
+    });
+    setLoading(false);
+    if(error){
+      toast.error(error.message, {theme: "colored"})
+    }else if(data.user) {
+      await supabase.auth.signInWithPassword({
+        email: payload.email,
+        password: payload.password
+      });
+      
+      toast.success("Login successfully", {theme: "colored"});
+      router.refresh();
+      setOpen(false);
+    }
+  };
 
   return (
-    <AlertDialog open={open} >
+    <AlertDialog open={open}>
       <AlertDialogTrigger asChild>
-        <li onClick={()=>{setOpen(true)}} className="cursor-pointer p-2 rounded-md hover:bg-slate-200">
+        <li
+          onClick={() => {
+            setOpen(true);
+          }} 
+          className="cursor-pointer p-2 rounded-md hover:bg-slate-200"
+        >
           Sign Up
         </li>
       </AlertDialogTrigger>
@@ -33,35 +84,64 @@ export default function SignUpModel() {
           <AlertDialogTitle asChild>
             <div className="flex items-center justify-between">
               <span>Register Your Account</span>
-              <span onClick={()=>setOpen(false)} className="hover: cursor-pointer bg-blue-200 p-1 h-8 w-8 text-center rounded" >X</span>
+              <span
+                onClick={() => setOpen(false)}
+                className="hover: cursor-pointer bg-blue-200 p-1 h-8 w-8 text-center rounded"
+              >
+                X
+              </span>
             </div>
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            <form>
+          <AlertDialogDescription asChild>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              
+              <ToastContainer />
               <h1 className="text-lg font-bold">Welcome To this Site</h1>
               <div className="my-2">
-                <Label  htmlFor="name">User Name</Label>
-                <Input className="my-2" placeholder="Enter Your name" id="name"></Input>
-                <span className="text-red-400"></span>
+                <Label htmlFor="name">User Name</Label>
+                <Input
+                  className="my-2"
+                  placeholder="Enter Your name"
+                  id="name"
+                  {...register("name")}
+                ></Input>
+                <span className="text-red-400">{errors.name?.message}</span>
               </div>
               <div className="my-2">
-                <Label  htmlFor="email">Email</Label>
-                <Input className="my-2" placeholder="Enter Your email" id="email"></Input>
-                <span className="text-red-400"></span>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  className="my-2"
+                  placeholder="Enter Your email"
+                  id="email"
+                  {...register("email")}
+                ></Input>
+                <span className="text-red-400">{errors.email?.message}</span>
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
-                <Input className="my-2" placeholder="Enter Your password" id="password"></Input>
-                <span className="text-red-400"></span>
+                <Input
+                  className="my-2"
+                  placeholder="Enter Your password"
+                  id="password"
+                  {...register("password")}
+                ></Input>
+                <span className="text-red-400">{errors.password?.message}</span>
               </div>
               <div>
                 <Label htmlFor="cpassword">Confirm Password</Label>
-                <Input className="my-2" placeholder="Cofirm Your password" id="cpassword"></Input>
-                <span className="text-red-400"></span>
+                <Input
+                  className="my-2"
+                  placeholder="Cofirm Your password"
+                  id="cpassword"
+                  {...register("password_confirmation")}
+                ></Input>
+                <span className="text-red-400">
+                  {errors.password_confirmation?.message}
+                </span>
               </div>
 
               <div className="mt-5">
-                <Button className="w-full">Sign up</Button>
+                <Button className="w-full" disabled={loading}>{loading ? "Prossing" : "Sign Up"}</Button>
               </div>
               <h1 className="text-center my-2 text-xl font-bold">-- OR --</h1>
               <Button variant="outline" className="w-full mt-2">
