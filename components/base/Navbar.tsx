@@ -3,8 +3,15 @@ import BrandLogo from './BrandLogo'
 import { MenuIcon, Search } from "lucide-react"
 import NavMenu from './NavMenu'
 import MobileNav from './MobileNav'
+import { createClient } from '@/utils/supabase/server'
 
-export default function Navbar() {
+export default async function Navbar() {
+
+  const supabase = createClient();
+
+  const {data, error} = await supabase.auth.getSession();
+ console.log(data)
+
   return (
     <div className='flex items-center justify-between px-4 border-b-2 my-2'>
       <div className='hidden md:block'>
@@ -27,7 +34,7 @@ export default function Navbar() {
         {/* thrid com */}
         <span>Add Your Home</span>
         
-        <NavMenu></NavMenu>
+        <NavMenu session={data?.session?.user}></NavMenu>
         
        
       </div>

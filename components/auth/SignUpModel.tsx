@@ -61,9 +61,10 @@ export default function SignUpModel() {
         password: payload.password
       });
       
-      toast.success("Login successfully", {theme: "colored"});
+      
       router.refresh();
       setOpen(false);
+      toast.success("Login successfully", {theme: "colored"});
     }
   };
 

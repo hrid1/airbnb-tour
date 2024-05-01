@@ -16,11 +16,13 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { createClient } from "@/utils/supabase/client";
+import { login } from './action'
 
 export default function LoginModel() {
 
-    const [open, setOpen] = useState(false)
-
+    const [open, setOpen] = useState(false);
+    
   return (
     <AlertDialog open={open} >
       <AlertDialogTrigger asChild>
@@ -41,17 +43,19 @@ export default function LoginModel() {
               <h1 className="text-lg font-bold">Welcome To this Site</h1>
               <div className="mt-5">
                 <Label  htmlFor="email">Email</Label>
-                <Input className="my-2" placeholder="Enter Your email" id="email"></Input>
+                <Input name="email" className="my-2" placeholder="Enter Your email" id="email"></Input>
                 <span className="text-red-400"></span>
               </div>
               <div>
                 <Label htmlFor="password">Password</Label>
-                <Input className="my-2" placeholder="Enter Your password" id="password"></Input>
+                <Input name="password" className="my-2" placeholder="Enter Your password" id="password"></Input>
                 <span className="text-red-400"></span>
               </div>
 
               <div className="mt-5">
-                <Button className="w-full">Continue</Button>
+                <Button
+                formAction={login} 
+                className="w-full">Continue</Button>
               </div>
               <h1 className="text-center my-2 text-xl font-bold">-- OR --</h1>
               <Button variant="outline" className="w-full mt-2">
