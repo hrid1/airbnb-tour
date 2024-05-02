@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import { createClient } from "@/utils/supabase/client";
 import { login } from './action'
+import SocialBtns from "./SocialBtns";
 
 export default function LoginModel() {
 
@@ -58,27 +59,10 @@ export default function LoginModel() {
                 className="w-full">Continue</Button>
               </div>
               <h1 className="text-center my-2 text-xl font-bold">-- OR --</h1>
-              <Button variant="outline" className="w-full mt-2">
-                <Image
-                  src="/images/google.png"
-                  width={40}
-                  height={40}
-                  alt="google login"
-                  className="mr-5 p-1"
-                ></Image>
-                <p>Continue with Google</p>
-              </Button>
-              <Button variant="outline" className="w-full mt-2">
-                <Image
-                  src="/images/github.png"
-                  width={40}
-                  height={40}
-                  alt="google login"
-                  className="mr-5 p-1"
-                ></Image>
-                <p>Continue with Github</p>
-              </Button>
+              
             </form>
+
+            <SocialBtns></SocialBtns>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

@@ -23,6 +23,7 @@ import Image from "next/image";
 import { RegisterType, registerSchema } from "@/validations/authSchema";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
+import SocialBtns from "./SocialBtns";
 
 
 
@@ -80,7 +81,7 @@ export default function SignUpModel() {
           Sign Up
         </li>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent >
         <AlertDialogHeader>
           <AlertDialogTitle asChild>
             <div className="flex items-center justify-between">
@@ -93,7 +94,7 @@ export default function SignUpModel() {
               </span>
             </div>
           </AlertDialogTitle>
-          <AlertDialogDescription asChild>
+          <AlertDialogDescription >
             <form onSubmit={handleSubmit(onSubmit)}>
               
               <ToastContainer />
@@ -145,7 +146,7 @@ export default function SignUpModel() {
                 <Button className="w-full" disabled={loading}>{loading ? "Prossing" : "Sign Up"}</Button>
               </div>
               <h1 className="text-center my-2 text-xl font-bold">-- OR --</h1>
-              <Button variant="outline" className="w-full mt-2">
+              {/* <Button variant="outline" className="w-full mt-2">
                 <Image
                   src="/images/google.png"
                   width={30}
@@ -164,8 +165,9 @@ export default function SignUpModel() {
                   className="mr-5 p-1"
                 ></Image>
                 <p>Sign up with Github</p>
-              </Button>
+              </Button> */}
             </form>
+            <SocialBtns></SocialBtns>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
