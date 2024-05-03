@@ -30,16 +30,20 @@ export default function SocialBtns() {
 
     
     async function signInWithGoogle() {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            redirectTo: "/",
-          }
-        })
-
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      })
+      
         if(error) {
             // <ToastContainer />
             toast.error(error.message, {theme: "colored"})
+            console.log(error)
         }
       }
    
